@@ -23,11 +23,19 @@ class Standar_Ql_agent:
     """
     Standar Ql agent sans replay buffer.
     """
-    def __init__(self,env, epsilon, alpha, discount):
+    def __init__(self,env, epsilon, alpha, discount, scal = [1,1]):
+        """
+        env      : le modèle de markov
+        epsilon  : probabilité d'une décision aléatoire
+        alpha    : paramètre de soft update, pourcentage de Q_cible à prendre
+        discount : le discount reward
+        scal     : coefficient du produit scalaire pour le calcul du reward
+        """
         self.discount = discount
         self.alpha    = alpha
         self.env      = env
         self.epsilon  = epsilon
+        self.scal     = scal
         self.Q_values = np.random.randn(*env.transitions.shape)
     
     def act(self):
@@ -53,7 +61,7 @@ class Standar_Ql_agent:
         new_action = self.env.id_state(self.act())
 
         self.Q_values[id_ob][new_ob] = (1-self.alpha)*self.Q_values[id_ob][new_ob] + \
-                                self.alpha*(np.sum(reward) + \
+                                self.alpha*(np.sum(reward*self.scal) + \
                                 self.discount*self.Q_values[new_ob][new_action])
 
     def time_to_learn(self):
