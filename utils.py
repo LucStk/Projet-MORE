@@ -19,6 +19,31 @@ class Markov_chain:
         for i,o in enumerate(val[:,2]):
             self.transitions[i] = np.int32(np.isin(self.states, o.split()))
 
+    def reset(self):
+        self.curent_state = self.start
+
+    def id_state(self, s):
+        return list(self.states).index(self.curent_state)
+
+    def actions_possibles(self):
+        id_state = self.id_state(self.curent_state)
+        return self.states[np.bool8(self.transitions[id_state])]
+
+    def action(self, act):
+        """
+        prends un état(str) ou un nombre représentant directement le xième état possible
+        Renvoi l'état courant et le reward associé
+        """
+        if type(act) is int:
+            act = self.actions_possibles()[act]
+
+        if act in self.actions_possibles():
+            self.curent_state = act
+            return act, self.rewards[self.states == act]
+        raise "Value error : état non atteignable"
+
+
+
 if __name__ == "__main__":
     MC = Markov_chain('env0')
 
