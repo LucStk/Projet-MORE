@@ -82,6 +82,7 @@ class Standar_Ql_agent:
                                     self.alpha*(np.sum(reward*np.array(self.scal)) + \
                                     self.discount*self.Q_values[id_new_ob][new_action])
 
+
     def time_to_learn(self):
         return True
 
@@ -244,3 +245,4 @@ class MORE_Ql_agent:
         self.lastTransition = (ob, tuple(reward[0]), new_ob)
         self.memory.append(self.lastTransition)
         self.memory_reward += reward[0]
+
