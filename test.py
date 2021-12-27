@@ -22,7 +22,7 @@ discount : 0.9
 agent = Standar_Ql_agent(env, epsilon = 0.5, alpha = 0.2, 
                          discount=0.90, scal = [1, 1])
 
-for i in range(1,nb_itérations):
+for i in range(nb_itérations):
     s = env.current_state
     new_s, r = env.action(agent.act())
     agent.store(s, r, new_s)

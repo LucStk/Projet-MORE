@@ -48,7 +48,10 @@ class Markov_chain:
             return act, self.rewards[self.states == act]
         raise "Value error : état non atteignable"
 
-
+    def id_states_possibles_from(self,s):
+        if type(s) is not int:
+            s = self.id_state(s)
+        return np.where(np.bool8(self.transitions[s]))[0]
 
 if __name__ == "__main__":
     MC = Markov_chain('env0')
