@@ -20,14 +20,20 @@ class Markov_chain:
             self.transitions[i] = np.int32(np.isin(self.states, o.split()))
 
     def reset(self):
-        self.curent_state = self.start
+        self.current_state = self.start
 
     def id_state(self, s):
-        return list(self.states).index(self.curent_state)
+        return list(self.states).index(s)
 
     def actions_possibles(self):
-        id_state = self.id_state(self.curent_state)
+        id_state = self.id_state(self.current_state)
         return self.states[np.bool8(self.transitions[id_state])]
+
+
+    def id_states_possibles_from(self,s):
+        if type(s) is not int:
+            s = self.id_state(s)
+        return np.where(np.bool8(self.transitions[s]))[0]
 
     def action(self, act):
         """
@@ -38,7 +44,7 @@ class Markov_chain:
             act = self.actions_possibles()[act]
 
         if act in self.actions_possibles():
-            self.curent_state = act
+            self.current_state = act
             return act, self.rewards[self.states == act]
         raise "Value error : état non atteignable"
 
