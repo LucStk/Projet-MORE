@@ -1,6 +1,6 @@
 import re
 import numpy as np
-
+import torch
 class Markov_chain:
 
     def __init__(self,path):
@@ -18,12 +18,26 @@ class Markov_chain:
         self.transitions = np.zeros((len(self.states), len(self.states))) #Ligne = départ, colonnes = arrivés
         for i,o in enumerate(val[:,2]):
             self.transitions[i] = np.int32(np.isin(self.states, o.split()))
+        
+        self.format = int(np.sum(self.transitions))
+        cpt = 1
+        for i in range(self.transitions.shape[0]):
+            for j in range(self.transitions.shape[1]):
+                if self.transitions[i][j]:
+                    self.transitions[i][j] = cpt
+                    cpt +=1
+        
 
     def reset(self):
         self.current_state = self.start
 
     def id_state(self, s):
         return list(self.states).index(s)
+
+    def one_hot(self, s1, s2):
+        tmp = torch.zeros(self.format)
+        tmp[int(self.transitions[s1][s2])-1] = 1
+        return tmp
 
     def actions_possibles(self):
         id_state = self.id_state(self.current_state)
